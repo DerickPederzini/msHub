@@ -2,13 +2,13 @@ package com.github.DerickPederzini.ms_pagamento.controllers;
 
 import com.github.DerickPederzini.ms_pagamento.data.dto.PagamentoDTO;
 import com.github.DerickPederzini.ms_pagamento.services.PagamentoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,6 +30,16 @@ public class PagamentoController {
         return ResponseEntity.ok(pagamentoDTO);
     }
 
+    @PostMapping
+    public ResponseEntity<PagamentoDTO> createPagamento(@RequestBody @Valid PagamentoDTO pagamentoDTO){
+        pagamentoDTO = pagamentoService.createPagamento(pagamentoDTO);
 
+        URI uri = ServletUriComponentsBuilder.
+                fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(pagamentoDTO.id())
+                .toUri();
+        return ResponseEntity.created(uri).body(pagamentoDTO);
+    }
 
 }

@@ -29,5 +29,22 @@ public class PagamentoService {
         return new PagamentoDTO(pagamento);
     }
 
+    @Transactional(readOnly = true)
+    public PagamentoDTO createPagamento(PagamentoDTO dto){
+        Pagamento pagamento = copyDtoToEntity(dto, new Pagamento());
+        pagamento = pagamentoRepository.save(pagamento);
+        return new PagamentoDTO(pagamento);
+    }
+
+    private Pagamento copyDtoToEntity(PagamentoDTO dto, Pagamento pagamento){
+        pagamento.setCodigoDeSeguranca(dto.codigoDeSeguranca());
+        pagamento.setFormaDePagamentoId(dto.formaDePagamentoId());
+        pagamento.setNome(dto.nome());
+        pagamento.setNumeroCartao(dto.codigoDeSeguranca());
+        pagamento.setValidade(dto.validade());
+        pagamento.setValor(dto.valor());
+        pagamento.setStatus(dto.status());
+        return pagamento;
+    }
 
 }
