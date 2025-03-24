@@ -3,6 +3,7 @@ package com.github.DerickPederzini.ms_pagamento.services;
 
 import com.github.DerickPederzini.ms_pagamento.data.dto.PagamentoDTO;
 import com.github.DerickPederzini.ms_pagamento.entities.Pagamento;
+import com.github.DerickPederzini.ms_pagamento.entities.Status;
 import com.github.DerickPederzini.ms_pagamento.repositories.PagamentoRepository;
 import com.github.DerickPederzini.ms_pagamento.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class PagamentoService {
     public PagamentoDTO createPagamento(PagamentoDTO dto){
         Pagamento pagamento = copyDtoToEntity(dto, new Pagamento());
         pagamento = pagamentoRepository.save(pagamento);
+        pagamento.setStatus(Status.CRIADO);
         return new PagamentoDTO(pagamento);
     }
 
