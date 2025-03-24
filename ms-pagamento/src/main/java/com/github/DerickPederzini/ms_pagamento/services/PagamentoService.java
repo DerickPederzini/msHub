@@ -22,4 +22,6 @@ public class PagamentoService {
         return pagamentos.stream().map(PagamentoDTO::new).toList();
     }
 
+
+
 }
