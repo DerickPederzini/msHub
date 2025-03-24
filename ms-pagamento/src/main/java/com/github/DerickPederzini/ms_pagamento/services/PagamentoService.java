@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PagamentoService {
@@ -21,7 +22,12 @@ public class PagamentoService {
         List<Pagamento> pagamentos = pagamentoRepository.findAll();
         return pagamentos.stream().map(PagamentoDTO::new).toList();
     }
-
+    @Transactional(readOnly = true)
+    public PagamentoDTO getById(Long id){
+        Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(
+                () -> new ResourcesNotFoundException("Recurso n encontrado"));
+        return new PagamentoDTO(pagamento);
+    }
 
 
 }
