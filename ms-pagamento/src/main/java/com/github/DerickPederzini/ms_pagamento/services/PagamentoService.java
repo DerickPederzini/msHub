@@ -6,6 +6,7 @@ import com.github.DerickPederzini.ms_pagamento.entities.Pagamento;
 import com.github.DerickPederzini.ms_pagamento.entities.Status;
 import com.github.DerickPederzini.ms_pagamento.repositories.PagamentoRepository;
 import com.github.DerickPederzini.ms_pagamento.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,19 @@ public class PagamentoService {
         pagamento = pagamentoRepository.save(pagamento);
         pagamento.setStatus(Status.CRIADO);
         return new PagamentoDTO(pagamento);
+    }
+
+    @Transactional(readOnly = true)
+    public PagamentoDTO updatePagamento(PagamentoDTO dto, Long id){
+        try {
+            Pagamento entity = new Pagamento();
+            copyDtoToEntity(dto, entity);
+            entity.setStatus(dto.status());
+            entity = pagamentoRepository.save(entity);
+            return new PagamentoDTO(entity);
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException("Haha");
+        }
     }
 
     private Pagamento copyDtoToEntity(PagamentoDTO dto, Pagamento pagamento){
