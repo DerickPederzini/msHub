@@ -1,12 +1,9 @@
 package com.github.DerickPederzini.ms_pagamento.controllers.handlers.dto;
 
-import lombok.Getter;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class ValidationErrorDTO extends CustomErrorDTO {
 
     private List<FieldMessageDTO> errors = new ArrayList<>();
@@ -20,5 +17,9 @@ public class ValidationErrorDTO extends CustomErrorDTO {
         //remove erro de campos duplicados
         errors.removeIf(x -> x.getFieldName().equals(fieldName));
         errors.add(new FieldMessageDTO(fieldName, message));
+    }
+
+    public List<FieldMessageDTO> getErrors() {
+        return errors;
     }
 }

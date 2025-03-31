@@ -2,11 +2,12 @@ package com.github.DerickPederzini.ms_pagamento.repostory;
 
 import com.github.DerickPederzini.ms_pagamento.entities.Pagamento;
 import com.github.DerickPederzini.ms_pagamento.repositories.PagamentoRepository;
+import com.github.DerickPederzini.ms_pagamento.test.Factory;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.util.Assert;
 
 import java.util.Optional;
 
@@ -14,14 +15,31 @@ import java.util.Optional;
 public class PagamentoRepositoryTest {
     @Autowired
     private PagamentoRepository pagamentoRepository;
+    private Long existingId;
+    private Long nonExistingId;
+    private Long countTotalPagemento;
+
+    @BeforeEach
+    void setup() throws Exception{
+        existingId = 1L;
+        nonExistingId = 100L;
+        countTotalPagemento = 0L;
+    }
 
     @Test
     public void deleteObjectWhenIdExists(){
-        Long existId = 1L;
+        pagamentoRepository.deleteById(existingId);
 
-        pagamentoRepository.deleteById(existId);
-
-        Optional<Pagamento> pagamento = pagamentoRepository.findById(existId);
+        Optional<Pagamento> pagamento = pagamentoRepository.findById(existingId);
         Assertions.assertTrue(pagamento.isEmpty(), "No existe pagamento, correto");
+    }
+
+    @Test
+    public void paramAndIdInstanciamPagamento(){
+        Pagamento pagamento = Factory.createPagamento();
+        pagamento.setId(null);
+        pagamento = pagamentoRepository.save(pagamento);
+        Assertions.assertNotNull(pagamento.getId());
+        Assertions.assertEquals(countTotalPagemento + 1, pagamento.getId());
     }
 }
