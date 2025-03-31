@@ -52,6 +52,13 @@ public class PagamentoService {
         }
     }
 
+    public void deletePagamento(Long id){
+        if (!pagamentoRepository.existsById(id)){
+            throw new ResourceNotFoundException("Not found");
+        }
+        pagamentoRepository.deleteById(id);
+    }
+
     private Pagamento copyDtoToEntity(PagamentoDTO dto, Pagamento pagamento){
         pagamento.setCodigoDeSeguranca(dto.codigoDeSeguranca());
         pagamento.setFormaDePagamentoId(dto.formaDePagamentoId());
