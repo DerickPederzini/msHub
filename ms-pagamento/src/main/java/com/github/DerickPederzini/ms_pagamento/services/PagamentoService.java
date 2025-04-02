@@ -42,13 +42,13 @@ public class PagamentoService {
     @Transactional(readOnly = true)
     public PagamentoDTO updatePagamento(PagamentoDTO dto, Long id){
         try {
-            Pagamento entity = new Pagamento();
+            Pagamento entity = pagamentoRepository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             entity.setStatus(dto.status());
             entity = pagamentoRepository.save(entity);
             return new PagamentoDTO(entity);
         }catch (EntityNotFoundException e){
-            throw new EntityNotFoundException("Haha");
+            throw new ResourceNotFoundException("Haha");
         }
     }
 

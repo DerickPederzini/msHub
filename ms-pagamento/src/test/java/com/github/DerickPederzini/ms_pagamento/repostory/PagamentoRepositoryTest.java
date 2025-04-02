@@ -15,15 +15,16 @@ import java.util.Optional;
 public class PagamentoRepositoryTest {
     @Autowired
     private PagamentoRepository pagamentoRepository;
+
     private Long existingId;
     private Long nonExistingId;
-    private Long countTotalPagemento;
+    private Long countTotalPagamento;
 
     @BeforeEach
     void setup() throws Exception{
         existingId = 1L;
         nonExistingId = 100L;
-        countTotalPagemento = 0L;
+        countTotalPagamento = 3L;
     }
 
     @Test
@@ -40,6 +41,22 @@ public class PagamentoRepositoryTest {
         pagamento.setId(null);
         pagamento = pagamentoRepository.save(pagamento);
         Assertions.assertNotNull(pagamento.getId());
-        Assertions.assertEquals(countTotalPagemento + 1, pagamento.getId());
+        Assertions.assertEquals(countTotalPagamento + 1, pagamento.getId());
     }
+
+    @Test
+    public void encontraPagamentoPorId(){
+        Optional<Pagamento> pagamentoId = pagamentoRepository.findById(existingId);
+        Assertions.assertTrue(pagamentoId.isPresent());
+    }
+
+    @Test
+    public void naoEncontraPagamentoPorId(){
+        Optional<Pagamento> pagamentoId = pagamentoRepository.findById(nonExistingId);
+        Assertions.assertNotNull(pagamentoId);
+        Assertions.assertFalse(pagamentoId.isPresent());
+    }
+
+
+
 }
