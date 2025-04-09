@@ -22,6 +22,7 @@ public record PagamentoDTO(Long id,
                            @NotBlank(message = "Campo obrigatorio") @Size(min = 3, max = 3,
                                    message = "Nome deve ter 3 char") String codigoDeSeguranca,
                            @Enumerated(value = EnumType.STRING) Status status,
+                           @NotNull(message = "Pedido ID é obrigatório") Long pedidoId,
                            @NotNull Long formaDePagamentoId
 ) {
     public PagamentoDTO(Pagamento entity){
@@ -32,7 +33,9 @@ public record PagamentoDTO(Long id,
                 entity.getValidade(),
                 entity.getCodigoDeSeguranca(),
                 entity.getStatus(),
-                entity.getPedidoId());
+                entity.getPedidoId(),
+                entity.getFormaDePagamentoId()
+        );
     }
 
 

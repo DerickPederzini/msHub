@@ -15,7 +15,7 @@ public class Factory {
     }
 
     public static PagamentoDTO createPagamentoDTO(){
-        Pagamento pagamento = new Pagamento();
+        Pagamento pagamento = createPagamento();
         return new PagamentoDTO(pagamento);
     }
 
