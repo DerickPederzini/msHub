@@ -7,6 +7,7 @@ import com.github.DerickPederzini.ms_pagamento.services.exceptions.ResourceNotFo
 import com.github.DerickPederzini.ms_pagamento.test.Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -41,7 +42,7 @@ public class PagamentoControllerTest {
 
 
     @BeforeEach
-    void setup() throws Exception{
+    void setup() throws Exception {
         existingId = 1L;
         nonExistingId = 100L;
         dto = Factory.createPagamentoDTO();
@@ -63,6 +64,8 @@ public class PagamentoControllerTest {
         Mockito.when(service.updatePagamento(any(), eq(nonExistingId)))
                 .thenThrow(ResourceNotFoundException.class);
 
+        Mockito.doNothing().when(service).deletePagamento(existingId);
+        Mockito.doThrow(ResourceNotFoundException.class).when(service).deletePagamento(nonExistingId);
     }
 
     @Test
@@ -72,7 +75,7 @@ public class PagamentoControllerTest {
     }
 
     @Test
-    public void getByIdShouldReturnDtoWhenIdExists() throws Exception{
+    public void getByIdShouldReturnDtoWhenIdExists() throws Exception {
         ResultActions actions = mockMvc.perform(get("/pagamentos/{id}", existingId).accept(MediaType.APPLICATION_JSON));
 
 
@@ -91,15 +94,15 @@ public class PagamentoControllerTest {
     }
 
     @Test
-    public void createPagamentoShouldReturnReturnDtoCreated() throws Exception{
+    public void createPagamentoShouldReturnReturnDtoCreated() throws Exception {
         PagamentoDTO pagamentoDTO = Factory.createNewPagamentoDTO();
         String json = _mapper.writeValueAsString(pagamentoDTO);
 
         mockMvc.perform(post("/pagamentos")
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-        ).andDo(print())
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(jsonPath("$.id").exists())
@@ -111,13 +114,13 @@ public class PagamentoControllerTest {
     }
 
     @Test
-    public void updatePagaemntoShouldReturnPagamentoDTOWhenIdExists()throws Exception{
+    public void updatePagaemntoShouldReturnPagamentoDTOWhenIdExists() throws Exception {
         String jsonRequestBody = _mapper.writeValueAsString(dto);
 
         mockMvc.perform(put("/pagamentos/{id}", existingId)
-                .content(jsonRequestBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(jsonRequestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
@@ -129,7 +132,7 @@ public class PagamentoControllerTest {
     }
 
     @Test
-    public void updatePagaemntoShouldThrowResourceNotFoundExceptionWhenIdNotExist()throws Exception{
+    public void updatePagaemntoShouldThrowResourceNotFoundExceptionWhenIdNotExist() throws Exception {
         String jsonRequestBody = _mapper.writeValueAsString(dto);
 
         mockMvc.perform(put("/pagamentos/{id}", nonExistingId)
@@ -140,6 +143,22 @@ public class PagamentoControllerTest {
                 .andExpect(status().isNotFound())
         ;
 
+    }
+
+    @Test
+    public void deleteShouldDoNothingWhenPagamentoIdExists() throws Exception {
+        mockMvc.perform(delete("/pagamentos/{id}", existingId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldThrowExceptionWhenPagamentoDontExists() throws Exception{
+        mockMvc.perform(delete("/pagamentos/{id}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 
