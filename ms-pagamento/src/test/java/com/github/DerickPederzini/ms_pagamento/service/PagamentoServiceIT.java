@@ -44,7 +44,18 @@ public class PagamentoServiceIT {
                 });
     }
 
+    @Test
+    public void getAllShouldReturnListPagamentoDTO(){
+        var result = pagamentoService.getAll();
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(countTotalPagamentos, result.size());
+        Assertions.assertEquals(Double.valueOf(35.55), result.get(0).valor().doubleValue());
+        Assertions.assertEquals("Amadeus Mozart", result.get(0).nome());
+        Assertions.assertEquals("Chiquinha Gonzaga", result.get(1).nome());
+        Assertions.assertNull(result.get(5).nome());
 
+
+    }
 
 
 }
