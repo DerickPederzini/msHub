@@ -23,7 +23,7 @@ public class Pagamento {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Status status;
-    @Column(nullable = false)
+    @Column(name = "pedido_id", nullable = false)
     private Long pedidoId;
     @Column(nullable = false)
     private Long formaDePagamentoId;
