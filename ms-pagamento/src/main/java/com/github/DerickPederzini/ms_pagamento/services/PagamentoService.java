@@ -31,7 +31,7 @@ public class PagamentoService {
         return new PagamentoDTO(pagamento);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public PagamentoDTO createPagamento(PagamentoDTO dto){
         Pagamento pagamento = copyDtoToEntity(dto, new Pagamento());
         pagamento = pagamentoRepository.save(pagamento);
@@ -39,7 +39,7 @@ public class PagamentoService {
         return new PagamentoDTO(pagamento);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public PagamentoDTO updatePagamento(PagamentoDTO dto, Long id){
         try {
             Pagamento entity = pagamentoRepository.getReferenceById(id);
@@ -67,6 +67,7 @@ public class PagamentoService {
         pagamento.setValidade(dto.validade());
         pagamento.setValor(dto.valor());
         pagamento.setStatus(dto.status());
+        pagamento.setPedidoId(dto.pedidoId());
         return pagamento;
     }
 
