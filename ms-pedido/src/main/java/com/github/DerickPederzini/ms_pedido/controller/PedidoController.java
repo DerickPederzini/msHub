@@ -5,6 +5,7 @@ import com.github.DerickPederzini.ms_pedido.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -18,21 +19,24 @@ public class PedidoController {
 
     @GetMapping
     public ResponseEntity<List<PedidoDTO>> getAllPedidos(){
-        List<PedidoDTO> pedidoDTO = null;
-        return ResponseEntity.ok(pedidoDTO);
+        List<PedidoDTO> pedidosDTO = pedidoService.getAll();
+        return ResponseEntity.ok(pedidosDTO);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> getPedidoById(@PathVariable Long id){
-        PedidoDTO pedidoDTO = null;
+        PedidoDTO pedidoDTO = pedidoService.getPedidoById(id);
         return ResponseEntity.ok(pedidoDTO);
     }
 
     @PostMapping
-    public ResponseEntity<PedidoDTO> createPedido(@PathVariable Long id){
-        PedidoDTO pedidoDTO = null;
-        URI uri = null;
-
+    public ResponseEntity<PedidoDTO> createPedido(@RequestBody PedidoDTO pedidoDTO){
+        pedidoDTO = pedidoService.createPedido(pedidoDTO);
+        URI uri = ServletUriComponentsBuilder.
+                fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(pedidoDTO.id())
+                .toUri();
         return ResponseEntity.created(uri).body(pedidoDTO);
     }
 
