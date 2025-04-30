@@ -9,8 +9,9 @@ import java.math.BigDecimal;
 
 public record ItemDoPedidoDTO(Long id,
                               @NotNull(message = "Quantidade requerida")
+                              @Positive(message = "Deve ser positivo")
                               Integer quantidade,
-                              @NotBlank(message = "Desc requerida")
+                              @NotBlank(message = "Descrição requerida")
                               String descricao,
                               @NotNull(message = "valor nulo")
                               @Positive(message = "Valor positivo")

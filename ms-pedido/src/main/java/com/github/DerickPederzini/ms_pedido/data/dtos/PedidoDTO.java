@@ -25,6 +25,7 @@ public record PedidoDTO(Long id,
                         LocalDate data,
                         @Enumerated(EnumType.STRING)
                         Status status,
+                        @NotEmpty(message = "Deve ter pelo menos um item do pedido")
                         List<@Valid ItemDoPedidoDTO> itens
 
 ) {
