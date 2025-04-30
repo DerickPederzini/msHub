@@ -65,7 +65,12 @@ public class PedidoService {
         }
     }
 
-
+    public void deletePedido(Long id){
+        if (!pedidoRepository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não encontrado "+ id);
+        }
+        pedidoRepository.deleteById(id);
+    }
 
 
     public void toEntity(PedidoDTO pedidoDTO, Pedido pedido){
