@@ -2,6 +2,7 @@ package com.github.DerickPederzini.ms_pedido.controller;
 
 import com.github.DerickPederzini.ms_pedido.data.dtos.PedidoDTO;
 import com.github.DerickPederzini.ms_pedido.service.PedidoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,13 @@ public class PedidoController {
                 .buildAndExpand(pedidoDTO.id())
                 .toUri();
         return ResponseEntity.created(uri).body(pedidoDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long id,
+                                                  @Valid @RequestBody PedidoDTO dto){
+        dto = pedidoService.updatePedido(id, dto);
+        return ResponseEntity.ok(dto);
     }
 
 }
