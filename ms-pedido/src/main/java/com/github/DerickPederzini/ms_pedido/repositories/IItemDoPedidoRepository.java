@@ -10,7 +10,6 @@ public interface IItemDoPedidoRepository extends JpaRepository<ItemDoPedido, Lon
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM TB_ITEM_DO_PEDIDO i where i.pedido_id = :pedidoId")
     void deleteByPedidoId(Long pedidoId);
 
 }
