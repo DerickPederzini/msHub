@@ -4,6 +4,7 @@ import com.github.DerickPederzini.ms_pagamento.data.dto.PagamentoDTO;
 import com.github.DerickPederzini.ms_pagamento.services.PagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,6 +18,11 @@ public class PagamentoController {
 
     @Autowired
     private PagamentoService pagamentoService;
+
+    @GetMapping("/port")
+    public String getPort(@Value("${local.server.port}") String porta){
+        return String.format("Request na instância recebida na porta "+ porta);
+    }
 
     @GetMapping
     public ResponseEntity<List<PagamentoDTO>> getAll(){
