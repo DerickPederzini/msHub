@@ -44,6 +44,7 @@ public class PedidoService {
         pedido.setData(LocalDate.now());
         pedido.setStatus(Status.REALIZADO);
         toEntity(pedidoDTO, pedido);
+        pedido.calcularTotalPedido();
         pedido = pedidoRepository.save(pedido);
         itemDoPedidoRepository.saveAll(pedido.getItens());
         return new PedidoDTO(pedido);

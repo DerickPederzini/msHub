@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +25,10 @@ public record PedidoDTO(Long id,
                         String cpf,
                         LocalDate data,
                         @Enumerated(EnumType.STRING)
-                        Status status,
+                        StatusDTO status,
                         @NotEmpty(message = "Deve ter pelo menos um item do pedido")
-                        List<@Valid ItemDoPedidoDTO> itens
+                        List<@Valid ItemDoPedidoDTO> itens,
+                        BigDecimal valorTotal
 
 ) {
     public PedidoDTO(Pedido pedido) {
@@ -34,8 +36,10 @@ public record PedidoDTO(Long id,
                 pedido.getNome(),
                 pedido.getCpf(),
                 pedido.getData(),
-                pedido.getStatus(),
-                new ArrayList<>());
+                new StatusDTO(pedido.getStatus()),
+                new ArrayList<>(),
+                pedido.getValorTotal()
+        );
         handlePedidos(pedido.getItens());
     }
 

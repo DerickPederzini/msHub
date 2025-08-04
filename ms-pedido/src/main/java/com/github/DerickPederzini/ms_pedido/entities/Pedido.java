@@ -3,6 +3,7 @@ package com.github.DerickPederzini.ms_pedido.entities;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,16 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    private BigDecimal valorTotal;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemDoPedido> itens = new ArrayList<>();
+
+    public void calcularTotalPedido(){
+        this.valorTotal = this.itens.stream().map(i -> i.getValorUnitario()
+                .multiply(BigDecimal.valueOf(i.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     public Pedido() {
     }
@@ -82,5 +91,13 @@ public class Pedido {
 
     public void setItens(List<ItemDoPedido> itens) {
         this.itens = itens;
+    }
+
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }
