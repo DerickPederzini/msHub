@@ -2,6 +2,7 @@ package com.github.DerickPederzini.ms_pedido.service;
 
 import com.github.DerickPederzini.ms_pedido.data.dtos.ItemDoPedidoDTO;
 import com.github.DerickPederzini.ms_pedido.data.dtos.PedidoDTO;
+import com.github.DerickPederzini.ms_pedido.data.dtos.StatusDTO;
 import com.github.DerickPederzini.ms_pedido.entities.ItemDoPedido;
 import com.github.DerickPederzini.ms_pedido.entities.Pedido;
 import com.github.DerickPederzini.ms_pedido.entities.Status;
@@ -64,6 +65,29 @@ public class PedidoService {
         }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Recurso não encontrado com id "+ id);
         }
+    }
+
+    @Transactional
+    public void aprovarPagamentoDoPedido(Long id){
+        Pedido pedido = pedidoRepository.getPedidoByIdWithItens(id);
+        if (pedido == null) {
+            throw new ResourceNotFoundException("Id nao existe"+ id);
+        }
+
+        pedido.setStatus(Status.PAGO);
+        pedidoRepository.updatePedido(Status.PAGO, pedido);
+    }
+
+    public PedidoDTO updatePedidoStatus(Long id, StatusDTO statusDTO){
+        Pedido pedido = pedidoRepository.getPedidoByIdWithItens(id);
+
+        if (pedido == null){
+            throw new ResourceNotFoundException("Id nao existe"+ id);
+        }
+
+        pedido.setStatus(statusDTO.getStatus());
+        pedidoRepository.updatePedido(statusDTO.getStatus(), pedido);
+        return new PedidoDTO(pedido);
     }
 
     public void deletePedido(Long id){

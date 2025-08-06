@@ -1,8 +1,10 @@
 package com.github.DerickPederzini.ms_pedido.controller;
 
 import com.github.DerickPederzini.ms_pedido.data.dtos.PedidoDTO;
+import com.github.DerickPederzini.ms_pedido.data.dtos.StatusDTO;
 import com.github.DerickPederzini.ms_pedido.service.PedidoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,21 @@ public class PedidoController {
         dto = pedidoService.updatePedido(id, dto);
         return ResponseEntity.ok(dto);
     }
+
+    @PutMapping("/{id}/pago")
+    public ResponseEntity<String> updatePedidoPago(@PathVariable @NotNull Long id){
+        pedidoService.aprovarPagamentoDoPedido(id);
+        String message = "Pedido atualizado para pago";
+        return ResponseEntity.ok().body(message);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<PedidoDTO> updatePedidoStatus(@PathVariable Long id,
+                                                  @Valid @RequestBody StatusDTO dto){
+        PedidoDTO pedidoDTO = pedidoService.updatePedidoStatus(id, dto);
+        return ResponseEntity.ok(pedidoDTO);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePedidoById(@PathVariable Long id){
