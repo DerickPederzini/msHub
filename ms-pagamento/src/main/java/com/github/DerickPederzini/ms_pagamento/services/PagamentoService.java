@@ -69,6 +69,14 @@ public class PagamentoService {
         pedidoClient.atualizarPagamentoDoPedido(pagamento.getPedidoId());
     }
 
+    @Transactional
+    public void alterarStatusDoPagamento(Long id){
+        Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nao encontrado com id"+ id));
+
+        pagamento.setStatus(Status.CONFIRMACAO_PENDENTE);
+        pagamentoRepository.save(pagamento);
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void deletePagamento(Long id){
         if (!pagamentoRepository.existsById(id)){

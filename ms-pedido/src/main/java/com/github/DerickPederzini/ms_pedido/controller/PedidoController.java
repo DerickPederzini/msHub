@@ -57,7 +57,7 @@ public class PedidoController {
     }
 
     @PutMapping("/{id}/pago")
-    public ResponseEntity<String> updatePedidoPago(@PathVariable @NotNull Long id){
+    public ResponseEntity<String> atualizarPagamentoDoPedido(@PathVariable @NotNull Long id){
         pedidoService.aprovarPagamentoDoPedido(id);
         String message = "Pedido atualizado para pago";
         return ResponseEntity.ok().body(message);

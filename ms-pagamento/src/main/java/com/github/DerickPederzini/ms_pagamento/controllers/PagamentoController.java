@@ -2,6 +2,7 @@ package com.github.DerickPederzini.ms_pagamento.controllers;
 
 import com.github.DerickPederzini.ms_pagamento.data.dto.PagamentoDTO;
 import com.github.DerickPederzini.ms_pagamento.services.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,13 @@ public class PagamentoController {
     }
 
     @PatchMapping("/{id}/confirmar")
+    @CircuitBreaker(name = "atualizarPedido", fallbackMethod = "confirmacaoPagamentoPendente")
     public void confirmarPagamentoDoPedido(@PathVariable @NotNull Long id){
         pagamentoService.confirmaPagamentoDoPedido(id);
+    }
+
+    public void confirmacaoPagamentoPendente(Long id, Exception e){
+        pagamentoService.alterarStatusDoPagamento(id);
     }
 
     @DeleteMapping("/{id}")
