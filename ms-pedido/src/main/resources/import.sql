@@ -1,5 +1,4 @@
 INSERT INTO tb_pedido(nome, cpf, data, status, valor_total) VALUES ('Jon Snow', '12345678965', '2025-04-28', 'REALIZADO', 540)
-
 INSERT INTO tb_pedido(nome, cpf, data, status, valor_total) VALUES ('Half-Horse Half-Man', '12345678965', '2025-12-22', 'PAGO', 500)
 INSERT INTO tb_pedido(nome, cpf, data, status, valor_total) VALUES ('Silverback Gorilla', '12345678965', '2025-04-28', 'CANCELADO', 900)
 
