@@ -2,6 +2,7 @@ package com.github.DerickPederzini.ms_pedido.controller;
 
 import com.github.DerickPederzini.ms_pedido.data.dtos.PedidoDTO;
 import com.github.DerickPederzini.ms_pedido.data.dtos.StatusDTO;
+import com.github.DerickPederzini.ms_pedido.kafka.PedidoProducer;
 import com.github.DerickPederzini.ms_pedido.service.PedidoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,10 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
+    @Autowired
+    private PedidoProducer producer;
+
+
     @GetMapping("/port")
     public String getPort(@Value("${local.server.port}") String porta){
         return String.format("Request na instância recebida na porta "+ porta);
@@ -36,6 +41,12 @@ public class PedidoController {
     public ResponseEntity<PedidoDTO> getPedidoById(@PathVariable Long id){
         PedidoDTO pedidoDTO = pedidoService.getPedidoById(id);
         return ResponseEntity.ok(pedidoDTO);
+    }
+
+    @PostMapping("/enviar")
+    public ResponseEntity<String> enviarMensagem(@RequestParam String mensagem) {
+        producer.enviarMensagem(mensagem);
+        return ResponseEntity.ok("Mensagem enviada para o Kafka: "+ mensagem);
     }
 
     @PostMapping
