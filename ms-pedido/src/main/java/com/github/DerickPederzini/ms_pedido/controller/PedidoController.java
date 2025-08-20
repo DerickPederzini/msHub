@@ -2,6 +2,7 @@ package com.github.DerickPederzini.ms_pedido.controller;
 
 import com.github.DerickPederzini.ms_pedido.data.dtos.PedidoDTO;
 import com.github.DerickPederzini.ms_pedido.data.dtos.StatusDTO;
+import com.github.DerickPederzini.ms_pedido.kafka.PagamentoConfirmadoProducer;
 import com.github.DerickPederzini.ms_pedido.kafka.PedidoProducer;
 import com.github.DerickPederzini.ms_pedido.service.PedidoService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,6 +26,9 @@ public class PedidoController {
 
     @Autowired
     private PedidoProducer producer;
+
+    @Autowired
+    PagamentoConfirmadoProducer pagamentoConfirmadoProducer;
 
 
     @GetMapping("/port")
@@ -47,6 +52,14 @@ public class PedidoController {
     public ResponseEntity<String> enviarMensagem(@RequestParam String mensagem) {
         producer.enviarMensagem(mensagem);
         return ResponseEntity.ok("Mensagem enviada para o Kafka: "+ mensagem);
+    }
+
+    @KafkaListener(topics = "pagamento-pendente", groupId = "ms-pedidos")
+    public void consumirPagamentoPendente (String pagamentoId) {
+        Long id = Long.parseLong(pagamentoId);
+
+        pedidoService.aprovarPagamentoDoPedido(id);
+        pagamentoConfirmadoProducer.enviarConfirmacao(id.toString());
     }
 
     @PostMapping

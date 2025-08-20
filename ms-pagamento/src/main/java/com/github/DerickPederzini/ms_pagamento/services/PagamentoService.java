@@ -70,6 +70,14 @@ public class PagamentoService {
     }
 
     @Transactional
+    public void confirmaPagamentoKafka(Long id) {
+        Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nao encontrado com id"+ id));
+
+        pagamento.setStatus(Status.CONFIRMADO);
+        pagamentoRepository.save(pagamento);
+    }
+
+    @Transactional
     public void alterarStatusDoPagamento(Long id){
         Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nao encontrado com id"+ id));
 
